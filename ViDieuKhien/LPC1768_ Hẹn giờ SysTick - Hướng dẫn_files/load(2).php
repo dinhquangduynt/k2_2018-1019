@@ -1,0 +1,2 @@
+@import url(https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic);div.mw-geshi{padding:1em;margin:1em 0;border:none;background-color:rgba(243,238,238,0.33)}
+/* cache key: wiki_sep18-wiki_:resourceloader:filter:minify-css:7:fb3ff3fb6fcbde95248c44394d8e1b5f */

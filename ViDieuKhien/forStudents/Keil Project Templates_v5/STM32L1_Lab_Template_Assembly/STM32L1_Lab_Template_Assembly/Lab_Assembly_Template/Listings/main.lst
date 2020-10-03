@@ -1,0 +1,118 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             main, CODE, READONLY
+    2 00000000                 EXPORT           __main      ; make __main visib
+                                                            le to linker
+    3 00000000                 ENTRY
+    4 00000000         
+    5 00000000         __main  PROC
+    6 00000000 4802            LDR              R0, =num    ; R0=mem addr cua n
+                                                            um
+    7 00000002 F06F 01FF       LDR              R1, =0xFFFFFF00 
+                                                            ; set first 24 bits
+                                                            
+    8 00000006 7801            LDRB             R1, [R0]    ; load a byte to R1
+                                                            
+    9 00000008 E7FE    stop    B                stop        ; dead loop & progr
+                                                            am hangs here
+   10 0000000A                 ENDP
+   11 0000000A         
+   12 0000000A 00 00 00000000  AREA             myData, DATA, READWRITE
+   13 00000000                 ALIGN
+   14 00000000 E1      num     DCB              0xE1
+   15 00000001 E3      num1    DCB              0xE3
+   16 00000002 65      num2    DCB              0x65
+   17 00000003 87      num3    DCB              0x87
+   18 00000004         
+   19 00000004                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\main.d -o.\objects\main.o -I"C:\Users\Duy\Google Drive\K
+HOA CNTT\GiangDay\ViDieuKhien\forStudents\Keil Project Templates_v5\STM32L1_Lab
+_Template_Assembly\STM32L1_Lab_Template_Assembly\Lab_Assembly_Template\RTE" -IC
+:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\STM
+32L1xx_DFP\1.0.2\Device\Include --predefine="__EVAL SETA 1" --predefine="__UVIS
+ION_VERSION SETA 518" --predefine="_RTE_ SETA 1" --predefine="STM32L1XX_MDP SET
+A 1" --list=.\listings\main.lst main.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 5 in file main.s
+   Uses
+      At line 2 in file main.s
+Comment: __main used once
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 1 in file main.s
+   Uses
+      None
+Comment: main unused
+stop 00000008
+
+Symbol: stop
+   Definitions
+      At line 9 in file main.s
+   Uses
+      At line 9 in file main.s
+Comment: stop used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+myData 00000000
+
+Symbol: myData
+   Definitions
+      At line 12 in file main.s
+   Uses
+      None
+Comment: myData unused
+num 00000000
+
+Symbol: num
+   Definitions
+      At line 14 in file main.s
+   Uses
+      At line 6 in file main.s
+Comment: num used once
+num1 00000001
+
+Symbol: num1
+   Definitions
+      At line 15 in file main.s
+   Uses
+      None
+Comment: num1 unused
+num2 00000002
+
+Symbol: num2
+   Definitions
+      At line 16 in file main.s
+   Uses
+      None
+Comment: num2 unused
+num3 00000003
+
+Symbol: num3
+   Definitions
+      At line 17 in file main.s
+   Uses
+      None
+Comment: num3 unused
+5 symbols
+344 symbols in table

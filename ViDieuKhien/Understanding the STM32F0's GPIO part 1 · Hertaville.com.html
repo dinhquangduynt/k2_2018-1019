@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<!-- saved from url=(0124)http://hertaville.com/stm32f0-gpio-tutorial-part-1.html?fbclid=IwAR3zTEUAnuKU2CfFZzUdrl-xO29THJQAio2OVxlNGgJ_cfOaiFWSFX0Mvwg -->
+<html lang="en" class=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+         
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="halherta">
+        <meta name="copyright" content="halherta">
+
+<meta name="keywords" content="STM32F0, GPIO, STM32F0, ">
+        <title>Understanding the STM32F0's GPIO part 1 · Hertaville.com</title>
+        <link href="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/slim-081711.css" rel="stylesheet" type="text/css">
+        <link href="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/bootstrap-combined.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/style.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/solarizedlight.css" media="screen">
+        <link rel="shortcut icon" href="http://hertaville.com/theme/images/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon" href="http://hertaville.com/theme/images/apple-touch-icon.png">
+        <link rel="apple-touch-icon" sizes="57x57" href="http://hertaville.com/theme/images/apple-touch-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="http://hertaville.com/theme/images/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="http://hertaville.com/theme/images/apple-touch-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="http://hertaville.com/theme/images/apple-touch-icon-144x144.png">
+        <link rel="icon" href="http://hertaville.com/theme/images/apple-touch-icon-144x144.png">
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/translateelement.css"></head>
+    <body>
+        <div id="content-sans-footer">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="http://hertaville.com/"><span class="site-name">Hertaville.com</span></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right top-menu">
+                            <li><a href="http://hertaville.com/">Home</a></li>
+                            <li><a href="http://hertaville.com/categories.html">Categories</a></li>
+                            <li><a href="http://hertaville.com/tags.html">Tags</a></li>
+                            <li><a href="http://hertaville.com/archives.html">Archives</a></li>
+                            <li><form class="navbar-search" action="http://hertaville.com/search.html" onsubmit="return validateForm(this.elements[&#39;q&#39;].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10">
+<article>
+<div class="row-fluid">
+    <header class="page_header span10 offset2">
+    <h1><a href="http://hertaville.com/stm32f0-gpio-tutorial-part-1.html"> Understanding the STM32F0's GPIO part 1  </a></h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+        <div class="span8 offset2 article-content">
+
+            <p>This is the first part of the GPIO tutorial for the STM32F0Discovery.
+The tutorial will include the following topics:</p>
+<ul class="simple">
+<li>Understanding the Structure of the GPIO Registers on the STM32F0
+Microcontroller</li>
+<li>Understanding how to access the registers</li>
+<li>Setting and clearing output pins</li>
+</ul>
+<div><p><a class="reference external" href="http://hertaville.com/stm32f0-gpio-tutorial-part-2.html">Part 2</a>
+will cover:</p>
+</div><ul class="simple">
+<li>RGB LED control</li>
+<li>Reading from inputs pins</li>
+<li>Hardware considerations</li>
+</ul>
+<p>The STM32F051 microcontroller on the STM32F0Discovery board has 5
+general purpose input/output (GPIO) ports named Port A, B, C, D and F.
+Each port can have up to 16 pins, and each port has associated with it
+the following set of registers:</p>
+<ul class="simple">
+<li>GPIO port mode register (GPIOx_MODER)</li>
+<li>GPIO port output type register (GPIOx_OTYPER)</li>
+<li>GPIO port output speed register (GPIOx_OSPEEDR)</li>
+<li>GPIO port pull-up/pull-down register (GPIOx_PUPDR)</li>
+<li>GPIO port input data register (GPIOx _IDR)</li>
+<li>GPIO port outp ut data register (GPIOx_ODR)</li>
+<li>GPIO port bit set/reset register (GPIOx _BSRR)</li>
+<li>GPIO port configuration lock register (GPIOx_LCKR)</li>
+<li>GPIO alternate function low register (GPI Ox_AFRL)</li>
+<li>GPIO alternate function high register (GPIOx_AFRH)</li>
+<li>GPIO Port bit reset register (GPIOx_BRR)</li>
+</ul>
+<p>where the 'x' in each register name acronym represents the port i.e. the
+GPIOx_MODER associated with port A is called GPIOA_MODER. Let's take a
+closer look at each register:</p>
+<p><strong>GPIO port mode register (GPIOx_MODER)</strong></p>
+<p>This is a 32-bit register where each set of two consecutive bits
+represent the mode of a single I/O pin. For example bits 0 and 1&nbsp; of the
+MODER register associated with GPIOC (GPIOC_MODER), represent the mode
+of GPIO pin PC0 and bits 26 and 27 of the same register represent the
+mode of GPIO pin PC13. These two bits can be set to:</p>
+<ul class="simple">
+<li>'00'-&gt; input mode, which allows the GPIO pin to be used as an input
+pin,</li>
+<li>'01'-&gt; Output mode, which allows the GPIO pin to be used as an output
+pin,</li>
+<li>'11'-&gt; Analog mode, which allows the GPIO pin to be used as an Analog
+input pin and finally,</li>
+<li>'10'-&gt; Alternate function mode which allow the GPIO pins to be used
+by peripherals such as the UART, SPI e.t.c. It is important to note
+that if a pin's MODE is set to alternate function,&nbsp; any GPIO settings
+for that pin in the GPIO registers will be overridden by the
+peripheral. I will be addressing Alternate function mode in more
+detail in a future entry.</li>
+</ul>
+<dl class="docutils">
+<dt><a class="reference external" href="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/art4image11.png"><img alt="Figure 1" src="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/art4image11.png"></a></dt>
+<dd>Figure 1 - GPIOx_MODER register</dd>
+</dl>
+<div><p><strong>GPIO port output type register (GPIOx_OTYPER)</strong></p>
+</div><p>This is a 16-bit register where each bit denotes the 'type' of a single
+pin in the register. This register sets the type of output pins to
+either push-pull or open drain. For example if pin PC7 is configured as
+an output pin, clearing bit 7 (or leaving its state at zero) of the
+OTYPER register associated with GPIOC (GPIOC_TYPER), will set the
+output type of the GPIO output pin PC7 to "Push-Pull".</p>
+<dl class="docutils">
+<dt><a class="reference external" href="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/art4image21.png"><img alt="Figure 2" src="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/art4image21.png"></a></dt>
+<dd>Figure 2. GPIOx_OTYPER Register</dd>
+</dl>
+<p><strong>GPIO port output speed register (GPIOx_OSPEEDR)</strong></p>
+<p>This is a 32-bit register where each set of two bits represent the speed
+of a single output pin. For example bits 0 and 1&nbsp; of the OSPEEDR
+register associated with port C (GPIOC_OSPEEDR), represent the speed
+setting of the output pin PC0 and bits 26 and 27 of the same register
+represent the speed setting of the output pin PC13. These two bits can
+be set to:</p>
+<ul class="simple">
+<li>'x0': 2MHz Low speed</li>
+<li>'01':10MHz Medium speed</li>
+<li>'11': 50MHz High speed</li>
+</ul>
+<p>So why have a speed setting on I/O ? To save power.&nbsp; On the 2MHz setting
+the GPIO would consume less current than on the 50MHz setting I'd
+imagine but would have relatively longer rise/fall time specs.</p>
+<p>The User Manual for the STM32F0 claims that the the output pins fastest
+toggle speed is every two clock cycles. Assuming a maximum operation
+speed of 48MHz, the fastest toggle speed for the GPIO on the STM32f0 is
+24 MHZ, which means the highest frequency square wave that can be
+produced by the GPIO is 12MHz.</p>
+<p>NOTE: A quick look at the default startup code found
+in"system_stm32f0xx.c" will identify that the&nbsp; microcontroller is
+indeed operating at a maximum speed of 48MHz at startup. In a future
+entry I will demonstrate how this speed can be changed.</p>
+<dl class="docutils">
+<dt><a class="reference external" href="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/art4image41.png"><img alt="Figure 3" src="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/art4image41.png"></a></dt>
+<dd>Figure 3. GPIOx_OSPEEDR register</dd>
+</dl>
+<p><strong>GPIO port&nbsp;pull-up/pull-down register (GPIOx_PUPDR)</strong></p>
+<p>The GPIOx_PUPDR registers configures the internal pull-ups and
+pull-down resistors on each I/O pin. The internal pull-up/down resistors
+can be configured on GPIO pins set as input or output (though I'd
+imagine they'd be more popular on input pins). The Pullup/down resistors
+have a typical value of 40KOhms but can range from 30-50Kohms.</p>
+<p>Again each two consecutive bits represent the internal pull-up/down
+resistor setting for each pin within a single port.</p>
+<dl class="docutils">
+<dt><a class="reference external" href="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/art4image51.png"><img alt="Figure 4" src="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/art4image51.png"></a></dt>
+<dd>Figure 4. GPIOx_PUPDR Register</dd>
+</dl>
+<p><strong>GPIO port input data register (GPIOx _IDR)</strong></p>
+<p>This is a 16-bit read-only register. Each bit represents the input value
+on a corresponding pin. Reading a '0' in bit 8 of this GPIOC _IDR
+register indicates that the voltage on PC8 is 0V (GND). While reading a
+'1' in bit 8 of this GPIOC _IDR register indicates that the voltage on
+PC8 is 3.3V (VDD)</p>
+<p><a class="reference external" href="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/art4image61.png"><img alt="Figure 5" src="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/art4image61.png"></a> Figure 5. GPIOx_IDR Register</p>
+<p><strong>GPIO port output data register (GPIOx_ODR)</strong></p>
+<p>This is a 16-bit read/write register. Each bit represents the output
+value on a corresponding pin. Writing a '0' in bit 8 of this GPIOC _ODR
+register indicates that the voltage on PC8 is driven by the micro to 0V
+(GND). While writing a '1' in bit 8 of this GPIOC _ODR register
+indicates that the voltage on PC8&nbsp;is driven by the micro to 3.3V (VDD).</p>
+<p>Writing to the ODR register is good&nbsp; if you want to write to the entire
+port.e.g.</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">ODR</span> <span class="o">=</span> <span class="mh">0xF0FE</span>
+</pre>
+<p>The above statement changes the state of every pin on the GPIOC
+peripheral from its previous (and now discarded)&nbsp; state, to the one
+indicated by the statement; 0xF0FE&nbsp; (0b1111000011111110).</p>
+<p>However if you want to set only a single pin; lets say PC8 without
+affecting&nbsp; the state of the rest of the pins on GPIOC, you have to
+perform a read-modify-write (RMW) access. To set pin PC8&nbsp; independent of
+all other pins on GPIOC (RMW) you could use:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">ODR</span> <span class="o">|=</span>  <span class="mh">0x00000100</span><span class="p">;</span>  <span class="c1">//( 0b00000000000000000000000100000000)</span>
+</pre>
+<p>To clear pin PC8 independent of all other pins on GPIOC (RMW) you could
+use:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">ODR</span> <span class="o">&amp;=</span>  <span class="o">~</span><span class="p">(</span><span class="mh">0x00000100</span><span class="p">);</span>  <span class="c1">//( 0b00000000000000000000000100000000)</span>
+</pre>
+<p>This works just fine, but you have to<strong>read</strong> the ODR register, OR
+(|) or AND(&amp;) <strong>(modify)</strong> it with a mask and then <strong>write</strong> it back to
+the ODR register. This means that at the assembly language level, at
+least three instructions are used to set/clear an I/O which can
+significantly slow down toggling speed. A better way would be to use the
+BSRR register&nbsp; and the BRR registers for setting and clearing pins. They
+enable 'atomic' access that allows the I/O pin to be clear/set in as
+short a time as possible.</p>
+<p><strong>GPIO port bit set/reset register (GPIOx _BSRR)</strong></p>
+<p>As mentioned in the preceding paragraph the BSRR register allows us to
+set/clear a particular pin (or groups of pins) while preserving the
+state of the rest of the pins on a GPIO peripheral atomically i.e. a
+fast as possible, without having to resort to the slower
+read-modify-write (RMW) accesses. The least significant 16 bits are used
+to atomically set pin values to VDD whereas the most significant 16 bits
+are used to atomically clear pin values to GND.</p>
+<p>So if I wanted to set PC8 independent of all other pins on GPIOC I could
+use:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BSRR</span> <span class="o">=</span> <span class="mh">0x00000100</span><span class="p">;</span><span class="c1">//( 0b00000000000000000000000100000000)</span>
+</pre>
+<p>or</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BSRR</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">8</span><span class="p">);</span>
+</pre>
+<p>To clear pin PC8 independent of all other pins on GPIOC you could use:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BSRR</span> <span class="o">=</span> <span class="mh">0x01000000</span><span class="p">;</span> <span class="c1">//( 0b00000001000000000000000000000000)</span>
+</pre>
+<p>or</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BSRR</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">24</span><span class="p">);</span>
+</pre>
+<p>Notice how in both scenarios a simple assignment operator '=' (atomic)
+was used rather than an '|=' or an '&amp;=' which denote RMW accesses.
+Furthermore, note that to clear the pin value of PC8 to GND, I had to
+set the 24th bit in the BSRR (8th bit of the most significant 16 bits).
+While to&nbsp; set the pin value of PC8 to VDD, I had to set the 8th bit in
+the BSRR. The awkwardness of atomic clearing being mapped to the most
+significant 16-bits of the BSRR register is compensated for by the
+inclusion of the BRR register. The BRR register maps the&nbsp; most
+significant 16-bits of the BSRR register into itself. So to clear pin
+PC8 independent of all other pins on GPIOC you could use:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BRR</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">8</span><span class="p">);</span>
+</pre>
+<p>Finally there are three more registers; the GPIOx_AFRH, GPIOx_AFRL,
+and the GPIOx_LCKR registers. The first two allow GPIO pins to be used
+for alternate functions. There is a really neat pin muxing mechanism
+that allows each GPIO to be mapped to multiple alternate functions
+depending on how these two registers are set. I will spend more time on
+the AFRL/AFRH registers in future entries. The last GPIOx_LCKR register
+can be used once GPIO is configured to 'lock' the configuration so that
+it does not change until the micro is reset. I encourage you to look up
+these three registers in the user manual.</p>
+<p><strong>Accessing Registers in C</strong></p>
+<p>The next step will be to look at how we access registers and perform bit
+manipulation. For setting bits in a&nbsp; register we can use the following:</p>
+<pre class="code cpp literal-block"><span class="n">PERIPHERAL</span><span class="o">-&gt;</span><span class="n">REG</span> <span class="o">|=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">;</span>
+</pre>
+<p>This will set bit 2 in register 'REG' in peripheral 'PERIPHERAL'.
+Alternately we could also specify:</p>
+<pre class="code cpp literal-block"><span class="n">PERIPHERAL</span><span class="o">-&gt;</span><span class="n">REG</span> <span class="o">|=</span><span class="mh">0x04</span><span class="p">;</span> <span class="c1">//hex
+</span><span class="n">PERIPHERAL</span><span class="o">-&gt;</span><span class="n">REG</span> <span class="o">|=</span><span class="mi">4</span><span class="p">;</span> <span class="c1">//decimal
+</span><span class="n">PERIPHERAL</span><span class="o">-&gt;</span><span class="n">REG</span> <span class="o">|=</span><span class="mi">0</span><span class="n">b100</span><span class="p">;</span><span class="c1">//binary</span>
+</pre>
+<p>This statement allows as to OR (|) the value of REG with a 'mask' that
+is "0b000000000000000000000000000000100"&nbsp; and store the result back in
+REG &nbsp;. This will have the effect of setting bit 2 in the REG register
+while preserving the state of all the other bits in REG.</p>
+<p>Now to clear bit 2 in register 'REG' in peripheral 'PERIPHERAL'.</p>
+<pre class="code cpp literal-block"><span class="n">PERIPHERAL</span><span class="o">-&gt;</span><span class="n">REG</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">;</span>
+</pre>
+<p>This statement allows as to AND (&amp;) the value of REG with a 'mask' that
+is the complement of "0b000000000000000000000000000000100" &nbsp;(which is
+"11111111111111111111111111111011") and store the result back in REG &nbsp;.
+This will have the effect of clearing bit 2 in the REG register while
+preserving the state of all the other bits in REG.</p>
+<p>Notice that all of these accesses are RMW. One can use RMW access to
+configure registers. But when it comes to toggling I/O, especially when
+speed is a concern, one should use atomic access via the BSRR/BRR
+registers.</p>
+<p>But what about all of this '-&gt;' business ? What does this mean? In
+general in the C programming language PERIPHERAL-&gt;REG&nbsp; means accessing
+"variable REG in a structure pointed to by pointer PERIPHERAL". I'll try
+and explain this further via the "stm32f0xx.h" header file. This file
+can be found in
+"C:\Development\STM32F0-Discovery_FW_V1.0.0\Libraries\CMSIS\ST\STM32F0xx\Include"
+if you followed the instructions in the tutorials.</p>
+<p>On line 396 of the "stm32f0xx.h" header file, you'll see a structure
+definition for the GPIO peripheral.</p>
+<div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="c1">//396</span>
+<span class="p">{</span>
+  <span class="n">__IO</span> <span class="kt">uint32_t</span> <span class="n">MODER</span><span class="p">;</span>        <span class="cm">/*!&lt; GPIO port mode register,                                  Address offset: 0x00 */</span>
+  <span class="n">__IO</span> <span class="kt">uint16_t</span> <span class="n">OTYPER</span><span class="p">;</span>       <span class="cm">/*!&lt; GPIO port output type register,                           Address offset: 0x04 */</span>
+  <span class="kt">uint16_t</span> <span class="n">RESERVED0</span><span class="p">;</span>         <span class="cm">/*!&lt; Reserved,                                                                 0x06 */</span>
+  <span class="n">__IO</span> <span class="kt">uint32_t</span> <span class="n">OSPEEDR</span><span class="p">;</span>      <span class="cm">/*!&lt; GPIO port output speed register,                          Address offset: 0x08 */</span>
+  <span class="n">__IO</span> <span class="kt">uint32_t</span> <span class="n">PUPDR</span><span class="p">;</span>        <span class="cm">/*!&lt; GPIO port pull-up/pull-down register,                     Address offset: 0x0C */</span>
+  <span class="n">__IO</span> <span class="kt">uint16_t</span> <span class="n">IDR</span><span class="p">;</span>          <span class="cm">/*!&lt; GPIO port input data register,                            Address offset: 0x10 */</span>
+  <span class="kt">uint16_t</span> <span class="n">RESERVED1</span><span class="p">;</span>         <span class="cm">/*!&lt; Reserved,                                                                 0x12 */</span>
+  <span class="n">__IO</span> <span class="kt">uint16_t</span> <span class="n">ODR</span><span class="p">;</span>          <span class="cm">/*!&lt; GPIO port output data register,                           Address offset: 0x14 */</span>
+  <span class="kt">uint16_t</span> <span class="n">RESERVED2</span><span class="p">;</span>         <span class="cm">/*!&lt; Reserved,                                                                 0x16 */</span>
+  <span class="n">__IO</span> <span class="kt">uint32_t</span> <span class="n">BSRR</span><span class="p">;</span>         <span class="cm">/*!&lt; GPIO port bit set/reset registerBSRR,                     Address offset: 0x18 */</span>
+  <span class="n">__IO</span> <span class="kt">uint32_t</span> <span class="n">LCKR</span><span class="p">;</span>         <span class="cm">/*!&lt; GPIO port configuration lock register,                    Address offset: 0x1C */</span>
+  <span class="n">__IO</span> <span class="kt">uint32_t</span> <span class="n">AFR</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>       <span class="cm">/*!&lt; GPIO alternate function low register,                Address offset: 0x20-0x24 */</span>
+  <span class="n">__IO</span> <span class="kt">uint16_t</span> <span class="n">BRR</span><span class="p">;</span>          <span class="cm">/*!&lt; GPIO bit reset register,                                  Address offset: 0x28 */</span>
+  <span class="kt">uint16_t</span> <span class="n">RESERVED3</span><span class="p">;</span>         <span class="cm">/*!&lt; Reserved,                                                                 0x2A */</span>
+<span class="p">}</span><span class="n">GPIO_TypeDef</span><span class="p">;</span>
+</pre></div>
+<p>At line 708 we see define statements that define the base address of
+each GPIO peripheral GPIOA, GPIOB, GPIOC, GPIOD and GPIOF.</p>
+<div class="highlight"><pre><span></span><span class="c1">//line 708</span>
+<span class="cp">#define GPIOA_BASE            (AHB2PERIPH_BASE + 0x00000000)</span>
+<span class="cp">#define GPIOB_BASE            (AHB2PERIPH_BASE + 0x00000400)</span>
+<span class="cp">#define GPIOC_BASE            (AHB2PERIPH_BASE + 0x00000800)</span>
+<span class="cp">#define GPIOD_BASE            (AHB2PERIPH_BASE + 0x00000C00)</span>
+<span class="cp">#define GPIOF_BASE            (AHB2PERIPH_BASE + 0x00001400)</span>
+</pre></div>
+<p>Now finally on line 762 we see that the base address of each peripheral
+is 'cast' as a pointer to the GPIO peripheral structure.</p>
+<p>This has the effect of mapping a pointer to the GPIO structure
+"(GPIO_TypeDef *)", at the respective GPIO peripheral base
+address...say "GPIOA_BASE" and that this pointer can be accessed by its
+alias "GPIOA".</p>
+<div class="highlight"><pre><span></span><span class="c1">//line 762</span>
+<span class="cp">#define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)</span>
+<span class="cp">#define GPIOB               ((GPIO_TypeDef *) GPIOB_BASE)</span>
+<span class="cp">#define GPIOC               ((GPIO_TypeDef *) GPIOC_BASE)</span>
+<span class="cp">#define GPIOD               ((GPIO_TypeDef *) GPIOD_BASE)</span>
+<span class="cp">#define GPIOF               ((GPIO_TypeDef *) GPIOF_BASE)</span>
+</pre></div>
+<p>But we're not done yet! Further down in the same header file we'll see
+all types of bit definitions that can replace the "(1 &lt;&lt;2)" explained
+above with something more useful. For example lets say that we want to
+set the mode of pin PC8 to output. We could do that via:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span> <span class="n">MODER</span> <span class="o">|=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">);</span>
+</pre>
+<p>Alternatively we could use:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span> <span class="n">MODER</span> <span class="o">|=</span> <span class="n">GPIO_MODER_MODER8_0</span> <span class="p">;</span>
+</pre>
+<p>Why? because at line&nbsp; 1446 of the header file we find the following
+define statement</p>
+<pre class="code cpp literal-block"><span class="cp">#define GPIO_MODER_MODER8_0        ((uint32_t)0x00010000)</span>
+</pre>
+<p>Using the second option makes quite a bit more sense than "(1&lt;&lt;16)"
+since it informs the programmer that we're setting the mode of pin PC8.
+This is not super informative and kind of long, but its still more
+informative than a simple (1 &lt;&lt; 16).</p>
+<p>Now what if we want to set the MODE of PC8 and PC9 to output in the same
+statement? we can use the bitwise OR operator to append as many flags as
+we like:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span> <span class="n">MODER</span> <span class="o">|=</span> <span class="p">(</span><span class="n">GPIO_MODER_MODER8_0</span><span class="o">|</span><span class="n">GPIO_MODER_MODER9_0</span><span class="p">)</span> <span class="p">;</span>
+</pre>
+<p>Now we will tackle our first complete example. This first example will
+have identical behavior to the <a class="reference external" href="http://hertaville.com/files/OTHERFILES/iotogglem0.zip">iotogglem0</a>
+example but will be coded without the use of the STM32F0 peripheral
+library. It will however rely heavily on use of the register definitions
+and bit definitions found in the "stm32f0xx.h" header file. This will
+not only make our code size significantly smaller, it will also mean
+that the makefile will not be as complicated and the build process will
+not depend on the location of the peripheral library on your hard drive
+i.e. its self-contained. The project folder for this project is called
+<a class="reference external" href="http://hertaville.com/files/OTHERFILES/gpiotogglep1.zip">gpiotogglep1 and be downloaded from here</a> .</p>
+<p>The complete main.c source file is shown below:</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">"stm32f0xx.h"</span><span class="cp"></span>
+
+<span class="cp">#define BSRR_VAL        0x0300</span>
+
+<span class="kt">void</span> <span class="nf">delay</span> <span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="cm">/*!&lt; At this stage the microcontroller clock setting is already configured,</span>
+<span class="cm">       this is done through SystemInit() function which is called from startup</span>
+<span class="cm">       file (startup_stm32f0xx.s) before to branch to application main.</span>
+<span class="cm">       To reconfigure the default setting of SystemInit() function, refer to</span>
+<span class="cm">       system_stm32f0xx.c file</span>
+<span class="cm">     */</span>
+
+  <span class="cm">/* GPIOC Periph clock enable */</span>
+    <span class="n">RCC</span><span class="o">-&gt;</span><span class="n">AHBENR</span> <span class="o">|=</span> <span class="n">RCC_AHBENR_GPIOCEN</span><span class="p">;</span>
+
+    <span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">MODER</span> <span class="o">|=</span> <span class="p">(</span><span class="n">GPIO_MODER_MODER8_0</span> <span class="o">|</span> <span class="n">GPIO_MODER_MODER9_0</span><span class="p">)</span> <span class="p">;</span>
+    <span class="cm">/* Configure PC8 and PC9 in output  mode  */</span>
+
+    <span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">OTYPER</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="n">GPIO_OTYPER_OT_8</span> <span class="o">|</span> <span class="n">GPIO_OTYPER_OT_9</span><span class="p">)</span> <span class="p">;</span>
+    <span class="c1">// Ensure push pull mode selected--default</span>
+
+    <span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">OSPEEDR</span> <span class="o">|=</span> <span class="p">(</span><span class="n">GPIO_OSPEEDER_OSPEEDR8</span><span class="o">|</span><span class="n">GPIO_OSPEEDER_OSPEEDR9</span><span class="p">);</span>
+    <span class="c1">//Ensure maximum speed setting (even though it is unnecessary)</span>
+
+    <span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">PUPDR</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="n">GPIO_PUPDR_PUPDR8</span><span class="o">|</span><span class="n">GPIO_PUPDR_PUPDR9</span><span class="p">);</span>
+    <span class="c1">//Ensure all pull up pull down resistors are disabled</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="cm">/* Set PC8 and PC9 */</span>
+        <span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BSRR</span> <span class="o">=</span> <span class="n">BSRR_VAL</span><span class="p">;</span>
+        <span class="n">delay</span><span class="p">(</span><span class="mi">500000</span><span class="p">);</span>
+        <span class="cm">/* Reset PC8 and PC9 */</span>
+        <span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BRR</span> <span class="o">=</span> <span class="n">BSRR_VAL</span><span class="p">;</span>
+        <span class="n">delay</span><span class="p">(</span><span class="mi">500000</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">delay</span> <span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">volatile</span> <span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span> <span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">a</span> <span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">j</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>The first three lines&nbsp; include an include statement for the
+"stm32f0xx.h" header file, a define statement for a value that&nbsp; will be
+used to toggle PC8 and PC9, which are connected to the LEDs on the the
+STM32F0 Discovery Board, and finally a simple delay function protoype.</p>
+<pre class="code cpp literal-block"><span class="cm">/* GPIOC Periph clock enable */</span>
+  <span class="n">RCC</span><span class="o">-&gt;</span><span class="n">AHBENR</span> <span class="o">|=</span> <span class="n">RCC_AHBENR_GPIOCEN</span><span class="p">;</span>
+</pre>
+<p>The&nbsp; first statement in the&nbsp; main function is shown above. Each
+peripheral on the the STM32F0 microcontroller is clock gated. This means
+that the clock signal does not reach the peripheral until we tell it to
+do so by way of setting a bit in a register. This means that the clock
+signal never reaches peripherals that we do not use and thus saves
+power. To enable the clock to reach the GPIOC peripheral, we need to set
+the "IOPCEN" bit (bit 19) in the AHBENR register in the RCC (Reset and
+Clock Control )peripheral. At this point I encourage you to take a look
+at the RCC peripheral in the user manual and to identify the bits that
+"gate" the clock for other peripherals such as the other GPIO
+peripherals (A,B,e.t.c), the SPI, USART e.t.c. I promise you that you'll
+find one bit per peripheral used for clock gating.</p>
+<p>Once we enable the clock to the GPIOC peripheral, we can configure the
+GPIOC peripheral as shown below. The first line configures PC8 and PC9
+as outputs, the second line ensures that both pins are in push-pull
+mode, the third line ensures that the maximum speed setting is set for
+both pins and the last line ensures that pullups/pull downs are disabled
+on both pins.&nbsp; At this point I strongly encourage you to look up the bit
+definitions on the left hand side of each statement up in the
+"stm32f0xx.h" header file to confirm that these statements are indeed
+correct.</p>
+<div class="highlight"><pre><span></span><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">MODER</span> <span class="o">|=</span> <span class="p">(</span><span class="n">GPIO_MODER_MODER8_0</span> <span class="o">|</span> <span class="n">GPIO_MODER_MODER9_0</span><span class="p">)</span> <span class="p">;</span>
+<span class="cm">/* Configure PC8 and PC9 in output  mode  */</span>
+
+<span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">OTYPER</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="n">GPIO_OTYPER_OT_8</span> <span class="o">|</span> <span class="n">GPIO_OTYPER_OT_9</span><span class="p">)</span> <span class="p">;</span>
+<span class="c1">// Ensure push pull mode selected--default</span>
+
+<span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">OSPEEDR</span> <span class="o">|=</span> <span class="p">(</span><span class="n">GPIO_OSPEEDER_OSPEEDR8</span><span class="o">|</span><span class="n">GPIO_OSPEEDER_OSPEEDR9</span><span class="p">);</span>
+<span class="c1">//Ensure maximum speed setting (even though it is unnecessary)</span>
+
+<span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">PUPDR</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="n">GPIO_PUPDR_PUPDR8</span><span class="o">|</span><span class="n">GPIO_PUPDR_PUPDR9</span><span class="p">);</span>
+<span class="c1">//Ensure all pull up pull down resistors are disabled</span>
+</pre></div>
+<p>The next block of code is a simple infinite (super) loop that writes
+bits 8 and 9 in the GPIOC_BSRR register to atomically set PC8 and PC9
+pins&nbsp; to VDD followed by a delay and then followed by a write to bits 8
+and 9 in the GPIOC_BRR register&nbsp; to atomically clear PC8 and PC9 pins
+to GND.</p>
+<div class="highlight"><pre><span></span><span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+   <span class="p">{</span>
+       <span class="cm">/* Set PC8 and PC9 */</span>
+       <span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BSRR</span> <span class="o">=</span> <span class="n">BSRR_VAL</span><span class="p">;</span>
+       <span class="n">delay</span><span class="p">(</span><span class="mi">500000</span><span class="p">);</span>
+       <span class="cm">/* Reset PC8 and PC9 */</span>
+       <span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BRR</span> <span class="o">=</span> <span class="n">BSRR_VAL</span><span class="p">;</span>
+       <span class="n">delay</span><span class="p">(</span><span class="mi">500000</span><span class="p">);</span>
+   <span class="p">}</span>
+</pre></div>
+<p>The program size for the non-peripheral library based gpiotogglep1
+project is 864 bytes, whereas the program size for the peripheral
+library based iotogglemo project&nbsp; that performs the same function was
+2556 bytes! that's an almost 3x program memory saving!</p>
+<p>In all fairness however this is a very small example. A fairer
+comparison could be achieved with a significantly larger project. But it
+does demonstrate that the peripheral library usage will consume more
+Flash memory.</p>
+<blockquote>
+</blockquote>
+
+            <aside>
+            <hr>
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="http://hertaville.com/the-iotogglem0-project-folder-structure-and-the-makefile.html" title="Previous: The iotogglem0 Project Folder Structure and the makefile">The iotogglem0 Project Folder Structure and the makefile</a></li>
+ 
+                <li class="next_article"><a href="http://hertaville.com/stm32f0-gpio-tutorial-part-2.html" title="Next: Understanding the STM32F0′s GPIO part 2">Understanding the STM32F0′s GPIO part 2</a> »</li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section>
+        <div class="span2" style="float:right;font-size:0.9em;">
+ 
+            <h4>Published</h4>
+            <time pubdate="pubdate" datetime="2012-07-28T19:41:00-04:00">Jul 28, 2012</time>
+            <h4>Category</h4>
+            <a class="category-link" href="http://hertaville.com/categories.html#STM32F0-ref">STM32F0</a> 
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article"> 
+                <li><a href="http://hertaville.com/tags.html#GPIO-ref">GPIO
+                    <span>7</span>
+</a></li>
+                <li><a href="http://hertaville.com/tags.html#STM32F0-ref">STM32F0
+                    <span>11</span>
+</a></li>
+            </ul>
+
+        </div>
+        </section>
+</div>
+</article>
+                </div>
+                <div class="span1"></div>
+            </div>
+        </div>
+    </div>
+<footer>
+<div id="footer">
+    <ul class="footer-content">
+        <li class="elegant-power">Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a>. Theme: <a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a> by <a href="http://oncrashreboot.com/" title="Talha Mansoor Home Page">Talha Mansoor</a></li>
+    </ul>
+</div>
+</footer>            <script src="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/jquery.min.js.tải xuống"></script>
+        <script src="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/bootstrap.min.js.tải xuống"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./Understanding the STM32F0&#39;s GPIO part 1 · Hertaville.com_files/translate_24dp.png" width="20" height="20" alt="Google Dịch"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">Văn bản gốc</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">Đóng góp bản dịch hay hơn</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+
+    
+<div class="goog-te-spinner-pos"><div class="goog-te-spinner-animation"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>

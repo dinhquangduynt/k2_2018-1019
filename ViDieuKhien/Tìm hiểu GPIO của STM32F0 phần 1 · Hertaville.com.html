@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<!-- saved from url=(0124)http://hertaville.com/stm32f0-gpio-tutorial-part-1.html?fbclid=IwAR3zTEUAnuKU2CfFZzUdrl-xO29THJQAio2OVxlNGgJ_cfOaiFWSFX0Mvwg -->
+<html lang="vi" class="translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+         
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="halherta">
+        <meta name="copyright" content="halherta">
+
+<meta name="keywords" content="STM32F0, GPIO, STM32F0, ">
+        <title>Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com</title>
+        <link href="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/slim-081711.css" rel="stylesheet" type="text/css">
+        <link href="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/bootstrap-combined.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/style.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/solarizedlight.css" media="screen">
+        <link rel="shortcut icon" href="http://hertaville.com/theme/images/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon" href="http://hertaville.com/theme/images/apple-touch-icon.png">
+        <link rel="apple-touch-icon" sizes="57x57" href="http://hertaville.com/theme/images/apple-touch-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="http://hertaville.com/theme/images/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="http://hertaville.com/theme/images/apple-touch-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="http://hertaville.com/theme/images/apple-touch-icon-144x144.png">
+        <link rel="icon" href="http://hertaville.com/theme/images/apple-touch-icon-144x144.png">
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/translateelement.css"></head>
+    <body>
+        <div id="content-sans-footer">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="http://hertaville.com/"><span class="site-name"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Hertaville.com</font></font></span></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right top-menu">
+                            <li><a href="http://hertaville.com/"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Nhà</font></font></a></li>
+                            <li><a href="http://hertaville.com/categories.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thể loại</font></font></a></li>
+                            <li><a href="http://hertaville.com/tags.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thẻ</font></font></a></li>
+                            <li><a href="http://hertaville.com/archives.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Lưu trữ</font></font></a></li>
+                            <li><form class="navbar-search" action="http://hertaville.com/search.html" onsubmit="return validateForm(this.elements[&#39;q&#39;].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10">
+<article>
+<div class="row-fluid">
+    <header class="page_header span10 offset2">
+    <h1><a href="http://hertaville.com/stm32f0-gpio-tutorial-part-1.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> Tìm hiểu GPIO của STM32F0 phần 1  </font></font></a></h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+        <div class="span8 offset2 article-content">
+
+            <p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Đây là phần đầu tiên của hướng dẫn GPIO cho STM32F0Discovery. </font><font style="vertical-align: inherit;">Hướng dẫn sẽ bao gồm các chủ đề sau:</font></font></p>
+<ul class="simple">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Tìm hiểu cấu trúc của các thanh ghi GPIO trên vi điều khiển STM32F0</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Hiểu cách truy cập vào sổ đăng ký</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Cài đặt và xóa chân đầu ra</font></font></li>
+</ul>
+<div><p><a class="reference external" href="http://hertaville.com/stm32f0-gpio-tutorial-part-2.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Phần 2</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 
+sẽ bao gồm:</font></font></p>
+</div><ul class="simple">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Điều khiển LED RGB</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Đọc từ chân đầu vào</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Cân nhắc phần cứng</font></font></li>
+</ul>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Bộ vi điều khiển STM32F051 trên bảng STM32F0Discovery có 5 cổng đầu vào / đầu ra (GPIO) có mục đích chung có tên là Cổng A, B, C, D và F. Mỗi cổng có thể có tới 16 chân và mỗi cổng được liên kết với nó. đăng ký:</font></font></p>
+<ul class="simple">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi chế độ cổng GPIO (GPIOx_MODER)</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi loại đầu ra cổng GPIO (GPIOx_OTYPER)</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi tốc độ đầu ra cổng GPIO (GPIOx_OSPEEDR)</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi kéo / kéo xuống cổng GPIO (GPIOx_PUPDR)</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi dữ liệu đầu vào cổng GPIO (GPIOx _IDR)</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Cổng GPIO outp ut dữ liệu đăng ký (GPIOx_ODR)</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi thiết lập / thiết lập lại cổng GPIO (GPIOx _BSRR)</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi khóa cấu hình cổng GPIO (GPIOx_LCKR)</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Chức năng thay thế GPIO thanh ghi thấp (GPI Ox_AFRL)</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Chức năng thay thế GPIO thanh ghi cao (GPIOx_AFRH)</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi thiết lập lại bit cổng GPIO (GPIOx_BRR)</font></font></li>
+</ul>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">trong đó 'x' trong mỗi từ viết tắt tên đăng ký đại diện cho cổng tức là GPIOx_MODER được liên kết với cổng A được gọi là GPIOA_MODER. </font><font style="vertical-align: inherit;">Chúng ta hãy xem xét kỹ hơn về mỗi đăng ký:</font></font></p>
+<p><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi chế độ cổng GPIO (GPIOx_MODER)</font></font></strong></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Đây là một thanh ghi 32 bit trong đó mỗi bộ gồm hai bit liên tiếp biểu thị chế độ của một chân I / O duy nhất. </font><font style="vertical-align: inherit;">Ví dụ: bit 0 và 1 của thanh ghi MODER được liên kết với GPIOC (GPIOC_MODER), biểu thị chế độ của chân GPIO PC0 và bit 26 và 27 của cùng một thanh ghi biểu thị chế độ của chân GPIO PC13. </font><font style="vertical-align: inherit;">Hai bit này có thể được đặt thành:</font></font></p>
+<ul class="simple">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">'00' -&gt; chế độ đầu vào, cho phép sử dụng chân GPIO làm chân đầu vào,</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">'01' -&gt; Chế độ đầu ra, cho phép sử dụng chân GPIO làm chân đầu ra,</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">'11' -&gt; Chế độ Analog, cho phép sử dụng chân GPIO làm chân đầu vào Analog và cuối cùng,</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">'10' -&gt; Chế độ chức năng thay thế cho phép các chân GPIO được sử dụng bởi các thiết bị ngoại vi như UART, SPI, v.v. Điều quan trọng cần lưu ý là nếu MODE của pin được đặt thành chức năng thay thế, mọi cài đặt GPIO cho chân đó trong GPIO các thanh ghi sẽ bị ghi đè bởi thiết bị ngoại vi. </font><font style="vertical-align: inherit;">Tôi sẽ giải quyết chế độ chức năng Thay thế chi tiết hơn trong một mục trong tương lai.</font></font></li>
+</ul>
+<dl class="docutils">
+<dt><a class="reference external" href="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/art4image11.png"><img alt="Hình 1" src="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/art4image11.png"></a></dt>
+<dd><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Hình 1 - Thanh ghi GPIOx_MODER</font></font></dd>
+</dl>
+<div><p><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi loại đầu ra cổng GPIO (GPIOx_OTYPER)</font></font></strong></p>
+</div><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Đây là một thanh ghi 16 bit trong đó mỗi bit biểu thị 'loại' của một pin trong thanh ghi. </font><font style="vertical-align: inherit;">Thanh ghi này đặt loại chân đầu ra thành kéo đẩy hoặc mở cống. </font><font style="vertical-align: inherit;">Ví dụ: nếu chân PC7 được cấu hình là chân đầu ra, xóa bit 7 (hoặc để trạng thái của nó ở mức 0) của thanh ghi OTYPER được liên kết với GPIOC (GPIOC_TYPER), sẽ đặt loại đầu ra của chân đầu ra GPIO PC7 thành "Đẩy-kéo ".</font></font></p>
+<dl class="docutils">
+<dt><a class="reference external" href="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/art4image21.png"><img alt="Hình 2" src="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/art4image21.png"></a></dt>
+<dd><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Hình 2. Đăng ký GPIOx_OTYPER</font></font></dd>
+</dl>
+<p><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi tốc độ đầu ra cổng GPIO (GPIOx_OSPEEDR)</font></font></strong></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Đây là một thanh ghi 32 bit trong đó mỗi bộ hai bit biểu thị tốc độ của một chân đầu ra duy nhất. </font><font style="vertical-align: inherit;">Ví dụ: các bit 0 và 1 của thanh ghi OSPEEDR được liên kết với cổng C (GPIOC_OSPEEDR), biểu thị cài đặt tốc độ của chân đầu ra PC0 và các bit 26 và 27 của cùng một thanh ghi biểu thị cài đặt tốc độ của chân đầu ra PC13. </font><font style="vertical-align: inherit;">Hai bit này có thể được đặt thành:</font></font></p>
+<ul class="simple">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">'x0': 2 MHz Tốc độ thấp</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">'01': 10 MHz Tốc độ trung bình</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">'11': 50 MHz tốc độ cao</font></font></li>
+</ul>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Vậy tại sao có cài đặt tốc độ trên I / O? </font><font style="vertical-align: inherit;">Để tiết kiệm điện. </font><font style="vertical-align: inherit;">Trên cài đặt 2 MHz, GPIO sẽ tiêu thụ ít dòng điện hơn so với cài đặt 50 MHz mà tôi tưởng tượng nhưng sẽ có thông số kỹ thuật thời gian tăng / giảm tương đối dài hơn.</font></font></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Hướng dẫn sử dụng cho STM32F0 tuyên bố rằng các chân đầu ra có tốc độ chuyển đổi nhanh nhất là cứ sau hai chu kỳ. </font><font style="vertical-align: inherit;">Giả sử tốc độ hoạt động tối đa là 48 MHz, tốc độ chuyển đổi nhanh nhất cho GPIO trên STM32f0 là 24 MHZ, có nghĩa là sóng vuông tần số cao nhất có thể được tạo ra bởi GPIO là 12 MHz.</font></font></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LƯU Ý: Nhìn nhanh vào mã khởi động mặc định được tìm thấy trong "system_stm32f0xx.c" sẽ xác định rằng vi điều khiển thực sự hoạt động ở tốc độ tối đa 48 MHz khi khởi động. </font><font style="vertical-align: inherit;">Trong một mục trong tương lai tôi sẽ chứng minh làm thế nào tốc độ này có thể được thay đổi.</font></font></p>
+<dl class="docutils">
+<dt><a class="reference external" href="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/art4image41.png"><img alt="Hình 3" src="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/art4image41.png"></a></dt>
+<dd><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Hình 3. Thanh ghi GPIOx_OSPEEDR</font></font></dd>
+</dl>
+<p><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi kéo / kéo xuống cổng GPIO (GPIOx_PUPDR)</font></font></strong></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Các thanh ghi GPIOx_PUPDR định cấu hình các điện trở kéo và kéo xuống bên trong trên mỗi chân I / O. </font><font style="vertical-align: inherit;">Các điện trở kéo lên / xuống bên trong có thể được cấu hình trên các chân GPIO được đặt làm đầu vào hoặc đầu ra (mặc dù tôi tưởng tượng chúng sẽ phổ biến hơn trên các chân đầu vào). </font><font style="vertical-align: inherit;">Các điện trở Pullup / xuống có giá trị điển hình là 40KOhms nhưng có thể dao động từ 30-50Kohms.</font></font></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Một lần nữa, hai bit liên tiếp đại diện cho cài đặt điện trở kéo lên / xuống bên trong cho mỗi chân trong một cổng.</font></font></p>
+<dl class="docutils">
+<dt><a class="reference external" href="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/art4image51.png"><img alt="hinh 4" src="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/art4image51.png"></a></dt>
+<dd><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Hình 4. Đăng ký GPIOx_PUPDR</font></font></dd>
+</dl>
+<p><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi dữ liệu đầu vào cổng GPIO (GPIOx _IDR)</font></font></strong></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Đây là một thanh ghi chỉ đọc 16 bit. </font><font style="vertical-align: inherit;">Mỗi bit đại diện cho giá trị đầu vào trên một pin tương ứng. </font><font style="vertical-align: inherit;">Đọc '0' trong bit 8 của thanh ghi GPIOC _IDR này cho biết điện áp trên PC8 là 0V (GND). </font><font style="vertical-align: inherit;">Trong khi đọc '1' trong bit 8 của thanh ghi GPIOC _IDR này chỉ ra rằng điện áp trên PC8 là 3,3V (VDD)</font></font></p>
+<p><a class="reference external" href="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/art4image61.png"><img alt="Hình 5" src="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/art4image61.png"></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> Hình 5. Đăng ký GPIOx_IDR</font></font></p>
+<p><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi dữ liệu đầu ra cổng GPIO (GPIOx_ODR)</font></font></strong></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Đây là một thanh ghi đọc / ghi 16 bit. </font><font style="vertical-align: inherit;">Mỗi bit đại diện cho giá trị đầu ra trên một pin tương ứng. </font><font style="vertical-align: inherit;">Viết '0' trong bit 8 của thanh ghi GPIOC _ODR này cho biết rằng điện áp trên PC8 được điều khiển bởi micro đến 0V (GND). </font><font style="vertical-align: inherit;">Trong khi viết '1' trong bit 8 của thanh ghi GPIOC _ODR này chỉ ra rằng điện áp trên PC8 được điều khiển bởi micro đến 3.3V (VDD).</font></font></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Viết vào thanh ghi ODR là tốt nếu bạn muốn ghi vào toàn bộ port.eg</font></font></p>
+<pre class="code cpp literal-block"><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ODR </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">= </font></font></span> <span class="mh"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0xF0FE</font></font></span>
+</pre>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Câu lệnh trên thay đổi trạng thái của mọi pin trên thiết bị ngoại vi GPIOC từ trạng thái trước đó (và hiện đã bị loại bỏ), sang trạng thái được chỉ định bởi câu lệnh; </font><font style="vertical-align: inherit;">0xF0FE (0b1111000011111110).</font></font></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Tuy nhiên nếu bạn chỉ muốn đặt một pin duy nhất; </font><font style="vertical-align: inherit;">giả sử PC8 mà không ảnh hưởng đến trạng thái của các chân còn lại trên GPIOC, bạn phải thực hiện quyền truy cập đọc-sửa đổi-ghi (RMW). </font><font style="vertical-align: inherit;">Để đặt chân PC8 độc lập với tất cả các chân khác trên GPIOC (RMW), bạn có thể sử dụng:</font></font></p>
+<pre class="code cpp literal-block"><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ODR </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| = </font></font></span>  <span class="mh"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0x00000100 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span>  <span class="c1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">// (0b0000000000000000000000010100000000)</font></font></span>
+</pre>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Để xóa pin PC8 độc lập với tất cả các chân khác trên GPIOC (RMW), bạn có thể sử dụng:</font></font></p>
+<pre class="code cpp literal-block"><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ODR </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&amp; = </font></font></span>  <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">~ </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="mh"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0x00000100 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">); </font></font></span>  <span class="c1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">// (0b0000000000000000000000010100000000)</font></font></span>
+</pre>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Điều này chỉ hoạt động tốt, nhưng bạn phải </font></font><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">đọc</font></font></strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> thanh ghi ODR, OR (|) hoặc AND (&amp;) </font></font><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">(sửa đổi)</font></font></strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> nó bằng mặt nạ và sau đó </font></font><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ghi</font></font></strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> lại vào thanh ghi ODR. </font><font style="vertical-align: inherit;">Điều này có nghĩa là ở cấp độ ngôn ngữ lắp ráp, ít nhất ba hướng dẫn được sử dụng để đặt / xóa I / O có thể làm chậm đáng kể tốc độ chuyển đổi. </font><font style="vertical-align: inherit;">Cách tốt hơn là sử dụng thanh ghi BSRR và thanh ghi BRR để cài đặt và xóa chân. </font><font style="vertical-align: inherit;">Chúng cho phép truy cập 'nguyên tử' cho phép chân I / O rõ ràng / được đặt trong thời gian ngắn nhất có thể.</font></font></p>
+<p><strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh ghi thiết lập / thiết lập lại cổng GPIO (GPIOx _BSRR)</font></font></strong></p>
+<p>As mentioned in the preceding paragraph the BSRR register allows us to
+set/clear a particular pin (or groups of pins) while preserving the
+state of the rest of the pins on a GPIO peripheral atomically i.e. a
+fast as possible, without having to resort to the slower
+read-modify-write (RMW) accesses. The least significant 16 bits are used
+to atomically set pin values to VDD whereas the most significant 16 bits
+are used to atomically clear pin values to GND.</p>
+<p>So if I wanted to set PC8 independent of all other pins on GPIOC I could
+use:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BSRR</span> <span class="o">=</span> <span class="mh">0x00000100</span><span class="p">;</span><span class="c1">//( 0b00000000000000000000000100000000)</span>
+</pre>
+<p>or</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BSRR</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">8</span><span class="p">);</span>
+</pre>
+<p>To clear pin PC8 independent of all other pins on GPIOC you could use:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BSRR</span> <span class="o">=</span> <span class="mh">0x01000000</span><span class="p">;</span> <span class="c1">//( 0b00000001000000000000000000000000)</span>
+</pre>
+<p>or</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BSRR</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">24</span><span class="p">);</span>
+</pre>
+<p>Notice how in both scenarios a simple assignment operator '=' (atomic)
+was used rather than an '|=' or an '&amp;=' which denote RMW accesses.
+Furthermore, note that to clear the pin value of PC8 to GND, I had to
+set the 24th bit in the BSRR (8th bit of the most significant 16 bits).
+While to&nbsp; set the pin value of PC8 to VDD, I had to set the 8th bit in
+the BSRR. The awkwardness of atomic clearing being mapped to the most
+significant 16-bits of the BSRR register is compensated for by the
+inclusion of the BRR register. The BRR register maps the&nbsp; most
+significant 16-bits of the BSRR register into itself. So to clear pin
+PC8 independent of all other pins on GPIOC you could use:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">BRR</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">8</span><span class="p">);</span>
+</pre>
+<p>Finally there are three more registers; the GPIOx_AFRH, GPIOx_AFRL,
+and the GPIOx_LCKR registers. The first two allow GPIO pins to be used
+for alternate functions. There is a really neat pin muxing mechanism
+that allows each GPIO to be mapped to multiple alternate functions
+depending on how these two registers are set. I will spend more time on
+the AFRL/AFRH registers in future entries. The last GPIOx_LCKR register
+can be used once GPIO is configured to 'lock' the configuration so that
+it does not change until the micro is reset. I encourage you to look up
+these three registers in the user manual.</p>
+<p><strong>Accessing Registers in C</strong></p>
+<p>The next step will be to look at how we access registers and perform bit
+manipulation. For setting bits in a&nbsp; register we can use the following:</p>
+<pre class="code cpp literal-block"><span class="n">PERIPHERAL</span><span class="o">-&gt;</span><span class="n">REG</span> <span class="o">|=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">;</span>
+</pre>
+<p>This will set bit 2 in register 'REG' in peripheral 'PERIPHERAL'.
+Alternately we could also specify:</p>
+<pre class="code cpp literal-block"><span class="n">PERIPHERAL</span><span class="o">-&gt;</span><span class="n">REG</span> <span class="o">|=</span><span class="mh">0x04</span><span class="p">;</span> <span class="c1">//hex
+</span><span class="n">PERIPHERAL</span><span class="o">-&gt;</span><span class="n">REG</span> <span class="o">|=</span><span class="mi">4</span><span class="p">;</span> <span class="c1">//decimal
+</span><span class="n">PERIPHERAL</span><span class="o">-&gt;</span><span class="n">REG</span> <span class="o">|=</span><span class="mi">0</span><span class="n">b100</span><span class="p">;</span><span class="c1">//binary</span>
+</pre>
+<p>This statement allows as to OR (|) the value of REG with a 'mask' that
+is "0b000000000000000000000000000000100"&nbsp; and store the result back in
+REG &nbsp;. This will have the effect of setting bit 2 in the REG register
+while preserving the state of all the other bits in REG.</p>
+<p>Now to clear bit 2 in register 'REG' in peripheral 'PERIPHERAL'.</p>
+<pre class="code cpp literal-block"><span class="n">PERIPHERAL</span><span class="o">-&gt;</span><span class="n">REG</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">;</span>
+</pre>
+<p>This statement allows as to AND (&amp;) the value of REG with a 'mask' that
+is the complement of "0b000000000000000000000000000000100" &nbsp;(which is
+"11111111111111111111111111111011") and store the result back in REG &nbsp;.
+This will have the effect of clearing bit 2 in the REG register while
+preserving the state of all the other bits in REG.</p>
+<p>Notice that all of these accesses are RMW. One can use RMW access to
+configure registers. But when it comes to toggling I/O, especially when
+speed is a concern, one should use atomic access via the BSRR/BRR
+registers.</p>
+<p>But what about all of this '-&gt;' business ? What does this mean? In
+general in the C programming language PERIPHERAL-&gt;REG&nbsp; means accessing
+"variable REG in a structure pointed to by pointer PERIPHERAL". I'll try
+and explain this further via the "stm32f0xx.h" header file. This file
+can be found in
+"C:\Development\STM32F0-Discovery_FW_V1.0.0\Libraries\CMSIS\ST\STM32F0xx\Include"
+if you followed the instructions in the tutorials.</p>
+<p>On line 396 of the "stm32f0xx.h" header file, you'll see a structure
+definition for the GPIO peripheral.</p>
+<div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="c1">//396</span>
+<span class="p">{</span>
+  <span class="n">__IO</span> <span class="kt">uint32_t</span> <span class="n">MODER</span><span class="p">;</span>        <span class="cm">/*!&lt; GPIO port mode register,                                  Address offset: 0x00 */</span>
+  <span class="n">__IO</span> <span class="kt">uint16_t</span> <span class="n">OTYPER</span><span class="p">;</span>       <span class="cm">/*!&lt; GPIO port output type register,                           Address offset: 0x04 */</span>
+  <span class="kt">uint16_t</span> <span class="n">RESERVED0</span><span class="p">;</span>         <span class="cm">/*!&lt; Reserved,                                                                 0x06 */</span>
+  <span class="n">__IO</span> <span class="kt">uint32_t</span> <span class="n">OSPEEDR</span><span class="p">;</span>      <span class="cm">/*!&lt; GPIO port output speed register,                          Address offset: 0x08 */</span>
+  <span class="n">__IO</span> <span class="kt">uint32_t</span> <span class="n">PUPDR</span><span class="p">;</span>        <span class="cm">/*!&lt; GPIO port pull-up/pull-down register,                     Address offset: 0x0C */</span>
+  <span class="n">__IO</span> <span class="kt">uint16_t</span> <span class="n">IDR</span><span class="p">;</span>          <span class="cm">/*!&lt; GPIO port input data register,                            Address offset: 0x10 */</span>
+  <span class="kt">uint16_t</span> <span class="n">RESERVED1</span><span class="p">;</span>         <span class="cm">/*!&lt; Reserved,                                                                 0x12 */</span>
+  <span class="n">__IO</span> <span class="kt">uint16_t</span> <span class="n">ODR</span><span class="p">;</span>          <span class="cm">/*!&lt; GPIO port output data register,                           Address offset: 0x14 */</span>
+  <span class="kt">uint16_t</span> <span class="n">RESERVED2</span><span class="p">;</span>         <span class="cm">/*!&lt; Reserved,                                                                 0x16 */</span>
+  <span class="n">__IO</span> <span class="kt">uint32_t</span> <span class="n">BSRR</span><span class="p">;</span>         <span class="cm">/*!&lt; GPIO port bit set/reset registerBSRR,                     Address offset: 0x18 */</span>
+  <span class="n">__IO</span> <span class="kt">uint32_t</span> <span class="n">LCKR</span><span class="p">;</span>         <span class="cm">/*!&lt; GPIO port configuration lock register,                    Address offset: 0x1C */</span>
+  <span class="n">__IO</span> <span class="kt">uint32_t</span> <span class="n">AFR</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>       <span class="cm">/*!&lt; GPIO alternate function low register,                Address offset: 0x20-0x24 */</span>
+  <span class="n">__IO</span> <span class="kt">uint16_t</span> <span class="n">BRR</span><span class="p">;</span>          <span class="cm">/*!&lt; GPIO bit reset register,                                  Address offset: 0x28 */</span>
+  <span class="kt">uint16_t</span> <span class="n">RESERVED3</span><span class="p">;</span>         <span class="cm">/*!&lt; Reserved,                                                                 0x2A */</span>
+<span class="p">}</span><span class="n">GPIO_TypeDef</span><span class="p">;</span>
+</pre></div>
+<p>At line 708 we see define statements that define the base address of
+each GPIO peripheral GPIOA, GPIOB, GPIOC, GPIOD and GPIOF.</p>
+<div class="highlight"><pre><span></span><span class="c1">//line 708</span>
+<span class="cp">#define GPIOA_BASE            (AHB2PERIPH_BASE + 0x00000000)</span>
+<span class="cp">#define GPIOB_BASE            (AHB2PERIPH_BASE + 0x00000400)</span>
+<span class="cp">#define GPIOC_BASE            (AHB2PERIPH_BASE + 0x00000800)</span>
+<span class="cp">#define GPIOD_BASE            (AHB2PERIPH_BASE + 0x00000C00)</span>
+<span class="cp">#define GPIOF_BASE            (AHB2PERIPH_BASE + 0x00001400)</span>
+</pre></div>
+<p>Now finally on line 762 we see that the base address of each peripheral
+is 'cast' as a pointer to the GPIO peripheral structure.</p>
+<p>This has the effect of mapping a pointer to the GPIO structure
+"(GPIO_TypeDef *)", at the respective GPIO peripheral base
+address...say "GPIOA_BASE" and that this pointer can be accessed by its
+alias "GPIOA".</p>
+<div class="highlight"><pre><span></span><span class="c1">//line 762</span>
+<span class="cp">#define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)</span>
+<span class="cp">#define GPIOB               ((GPIO_TypeDef *) GPIOB_BASE)</span>
+<span class="cp">#define GPIOC               ((GPIO_TypeDef *) GPIOC_BASE)</span>
+<span class="cp">#define GPIOD               ((GPIO_TypeDef *) GPIOD_BASE)</span>
+<span class="cp">#define GPIOF               ((GPIO_TypeDef *) GPIOF_BASE)</span>
+</pre></div>
+<p>But we're not done yet! Further down in the same header file we'll see
+all types of bit definitions that can replace the "(1 &lt;&lt;2)" explained
+above with something more useful. For example lets say that we want to
+set the mode of pin PC8 to output. We could do that via:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span> <span class="n">MODER</span> <span class="o">|=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">);</span>
+</pre>
+<p>Alternatively we could use:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span> <span class="n">MODER</span> <span class="o">|=</span> <span class="n">GPIO_MODER_MODER8_0</span> <span class="p">;</span>
+</pre>
+<p>Why? because at line&nbsp; 1446 of the header file we find the following
+define statement</p>
+<pre class="code cpp literal-block"><span class="cp">#define GPIO_MODER_MODER8_0        ((uint32_t)0x00010000)</span>
+</pre>
+<p>Using the second option makes quite a bit more sense than "(1&lt;&lt;16)"
+since it informs the programmer that we're setting the mode of pin PC8.
+This is not super informative and kind of long, but its still more
+informative than a simple (1 &lt;&lt; 16).</p>
+<p>Now what if we want to set the MODE of PC8 and PC9 to output in the same
+statement? we can use the bitwise OR operator to append as many flags as
+we like:</p>
+<pre class="code cpp literal-block"><span class="n">GPIOC</span><span class="o">-&gt;</span> <span class="n">MODER</span> <span class="o">|=</span> <span class="p">(</span><span class="n">GPIO_MODER_MODER8_0</span><span class="o">|</span><span class="n">GPIO_MODER_MODER9_0</span><span class="p">)</span> <span class="p">;</span>
+</pre>
+<p>Now we will tackle our first complete example. This first example will
+have identical behavior to the <a class="reference external" href="http://hertaville.com/files/OTHERFILES/iotogglem0.zip">iotogglem0</a>
+example but will be coded without the use of the STM32F0 peripheral
+library. It will however rely heavily on use of the register definitions
+and bit definitions found in the "stm32f0xx.h" header file. This will
+not only make our code size significantly smaller, it will also mean
+that the makefile will not be as complicated and the build process will
+not depend on the location of the peripheral library on your hard drive
+i.e. its self-contained. The project folder for this project is called
+<a class="reference external" href="http://hertaville.com/files/OTHERFILES/gpiotogglep1.zip">gpiotogglep1 and be downloaded from here</a> .</p>
+<p>The complete main.c source file is shown below:</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">"stm32f0xx.h"</span><span class="cp"></span>
+
+<span class="cp">#define BSRR_VAL        0x0300</span>
+
+<span class="kt">void</span> <span class="nf">delay</span> <span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="cm">/*!&lt; At this stage the microcontroller clock setting is already configured,</span>
+<span class="cm">       this is done through SystemInit() function which is called from startup</span>
+<span class="cm">       file (startup_stm32f0xx.s) before to branch to application main.</span>
+<span class="cm">       To reconfigure the default setting of SystemInit() function, refer to</span>
+<span class="cm">       system_stm32f0xx.c file</span>
+<span class="cm">     */</span>
+
+  <span class="cm">/* GPIOC Periph clock enable */</span>
+    <span class="n">RCC</span><span class="o">-&gt;</span><span class="n">AHBENR</span> <span class="o">|=</span> <span class="n">RCC_AHBENR_GPIOCEN</span><span class="p">;</span>
+
+    <span class="n">GPIOC</span><span class="o">-&gt;</span><span class="n">MODER</span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| = </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_MODER_MODER8_0 </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_MODER_MODER9_0 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">) </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span>
+    <span class="cm"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">/ * Định cấu hình PC8 và PC9 ở chế độ đầu ra * / </font></font></span>
+
+    <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">OTYPER </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&amp; = </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">~ </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_OTYPER_OT_8 </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_OTYPER_OT_9 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">) </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span>
+    <span class="c1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">// Đảm bảo chế độ kéo đẩy được chọn - </font></font></span>
+
+    <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><font style="vertical-align: inherit;"><span class="c1"><font style="vertical-align: inherit;">mặc định </font></span></font><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">OSPEEDR </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| = </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_OSPEEDER_OSPEEDR8 </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_OSPEEDER_OSPEEDR9 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">); </font></font></span>
+    <span class="c1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">// Đảm bảo cài đặt tốc độ tối đa (mặc dù không cần thiết) </font></font></span>
+
+    <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">PUPDR </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&amp; = </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">~ </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_PUPDR_PUPDR8 </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">|</font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_PUPDR_PUPDR9 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">); </font></font></span>
+    <span class="c1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">// Đảm bảo tất cả các điện trở kéo xuống được tắt </font></font></span>
+
+    <span class="k"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">trong khi </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="mi"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">) </font></font></span>
+    <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{ </font></font></span>
+        <span class="cm"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">/ * Đặt PC8 và PC9 * / </font></font></span>
+        <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">BSRR </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">= </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">BSRR_VAL </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span>
+        <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">trì hoãn </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="mi"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">500000 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">); </font></font></span>
+        <span class="cm"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">/ * Đặt lại PC8 và PC9 * / </font></font></span>
+        <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">BRR </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">= </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">BSRR_VAL </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span>
+        <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">trì hoãn </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="mi"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">500000 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">); </font></font></span>
+    <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">} </font></font></span>
+
+    <span class="k"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">trả về </font></font></span> <span class="mi"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span>
+<span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">} </font></font></span>
+
+<span class="kt"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">void </font></font></span> <span class="nf"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">delay </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="kt"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">int </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">a </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">) </font></font></span>
+<span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{ </font></font></span>
+    <span class="k"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">volility </font></font></span> <span class="kt"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">int </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">i </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">, </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">j </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">;</font></font></span>
+
+    <span class="k"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">for </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">i </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">= </font></font></span><span class="mi"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0 </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">i </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&lt; </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">a </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">i </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">++ </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">) </font></font></span>
+    <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{ </font></font></span>
+        <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">j </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">++ </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span>
+    <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">} </font></font></span>
+
+    <span class="k"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">trả lại </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span>
+<span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">}</font></font></span>
+</pre></div>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ba dòng đầu tiên bao gồm một câu lệnh bao gồm tệp tiêu đề "stm32f0xx.h", một câu lệnh xác định cho một giá trị sẽ được sử dụng để chuyển đổi PC8 và PC9, được kết nối với đèn LED trên Bảng khám phá STM32F0 và cuối cùng là một chức năng trì hoãn đơn giản protoype.</font></font></p>
+<pre class="code cpp literal-block"><span class="cm"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">/ * Đồng hồ GPIOC Periph cho phép * / </font></font></span>
+  <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">RCC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">AHBENR </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| = </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">RCC_AHBENR_GPIOCEN </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">;</font></font></span>
+</pre>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Câu lệnh đầu tiên trong chức năng chính được hiển thị ở trên. </font><font style="vertical-align: inherit;">Mỗi thiết bị ngoại vi trên vi điều khiển STM32F0 được đặt xung nhịp. </font><font style="vertical-align: inherit;">Điều này có nghĩa là tín hiệu đồng hồ không đến được thiết bị ngoại vi cho đến khi chúng ta bảo nó làm như vậy bằng cách thiết lập một chút trong thanh ghi. </font><font style="vertical-align: inherit;">Điều này có nghĩa là tín hiệu đồng hồ không bao giờ đến các thiết bị ngoại vi mà chúng ta không sử dụng và do đó tiết kiệm năng lượng. </font><font style="vertical-align: inherit;">Để cho phép đồng hồ tiếp cận với thiết bị ngoại vi GPIOC, chúng ta cần đặt bit "IOPCEN" (bit 19) trong thanh ghi AHBENR trong thiết bị ngoại vi RCC (Đặt lại và Điều khiển Đồng hồ). </font><font style="vertical-align: inherit;">Tại thời điểm này, tôi khuyến khích bạn hãy xem thiết bị ngoại vi RCC trong hướng dẫn sử dụng và xác định các bit "cổng" đồng hồ cho các thiết bị ngoại vi khác như các thiết bị ngoại vi GPIO khác (A, B, v.v.), SPI, USART vv Tôi hứa với bạn rằng bạn sẽ tìm thấy một bit trên mỗi thiết bị ngoại vi được sử dụng để đo đồng hồ.</font></font></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Khi chúng tôi kích hoạt đồng hồ cho thiết bị ngoại vi GPIOC, chúng tôi có thể định cấu hình thiết bị ngoại vi GPIOC như dưới đây. </font><font style="vertical-align: inherit;">Dòng đầu tiên cấu hình PC8 và PC9 làm đầu ra, dòng thứ hai đảm bảo rằng cả hai chân đều ở chế độ kéo đẩy, dòng thứ ba đảm bảo rằng cài đặt tốc độ tối đa được đặt cho cả hai chân và dòng cuối cùng đảm bảo tắt / kéo xuống trên cả hai chân. </font><font style="vertical-align: inherit;">Tại thời điểm này, tôi khuyến khích bạn tìm kiếm các định nghĩa bit ở phía bên trái của mỗi câu lệnh trong tệp tiêu đề "stm32f0xx.h" để xác nhận rằng các câu lệnh này thực sự chính xác.</font></font></p>
+<div class="highlight"><pre><span></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">MODER </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| = </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_MODER_MODER8_0 </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_MODER_MODER9_0 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">) </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span>
+<span class="cm"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">/ * Định cấu hình PC8 và PC9 ở chế độ đầu ra * / </font></font></span>
+
+<span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">OTYPER </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&amp; = </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">~ </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_OTYPER_OT_8 </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_OTYPER_OT_9 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">) </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span>
+<span class="c1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">// Đảm bảo chế độ kéo đẩy được chọn - </font></font></span>
+
+<span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><font style="vertical-align: inherit;"><span class="c1"><font style="vertical-align: inherit;">mặc định </font></span></font><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">OSPEEDR </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| = </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_OSPEEDER_OSPEEDR8 </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_OSPEEDER_OSPEEDR9 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">); </font></font></span>
+<span class="c1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">// Đảm bảo cài đặt tốc độ tối đa (mặc dù không cần thiết) </font></font></span>
+
+<span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">PUPDR </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&amp; = </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">~ </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">(</font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_PUPDR_PUPDR8 </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">| </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO_PUPDR_PUPDR9 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">); </font></font></span>
+<span class="c1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">// Đảm bảo tất cả các điện trở kéo xuống kéo xuống đều bị vô hiệu hóa</font></font></span>
+</pre></div>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Khối mã tiếp theo là một vòng lặp vô hạn (siêu) đơn giản ghi các bit 8 và 9 trong thanh ghi GPIOC_BSRR để đặt các chân PC8 và PC9 thành VDD một cách chậm trễ, sau đó ghi vào các bit 8 và 9 trong GPIOC_BRR đăng ký để xóa chân PC8 và PC9 về GND.</font></font></p>
+<div class="highlight"><pre><span></span><span class="k"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">while </font></font></span> <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="mi"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">) </font></font></span>
+   <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{ </font></font></span>
+       <span class="cm"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">/ * Đặt PC8 và PC9 * / </font></font></span>
+       <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">BSRR </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">= </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">BSRR_VAL </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span>
+       <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">trì hoãn </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="mi"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">500000 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">); </font></font></span>
+       <span class="cm"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">/ * Đặt lại PC8 và PC9 * / </font></font></span>
+       <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIOC </font></font></span><span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-&gt; </font></font></span><span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">BRR </font></font></span> <span class="o"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">= </font></font></span> <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">BSRR_VAL </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">; </font></font></span>
+       <span class="n"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">trì hoãn </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">( </font></font></span><span class="mi"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">500000 </font></font></span><span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">); </font></font></span>
+   <span class="p"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">}</font></font></span>
+</pre></div>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Kích thước chương trình cho dự án gpi photorp1 dựa trên thư viện không ngoại vi là 864 byte, trong khi kích thước chương trình cho dự án i photodemo dựa trên thư viện ngoại vi thực hiện cùng chức năng là 2556 byte! </font><font style="vertical-align: inherit;">đó là tiết kiệm bộ nhớ chương trình gần gấp 3 lần!</font></font></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Trong tất cả các công bằng tuy nhiên đây là một ví dụ rất nhỏ. </font><font style="vertical-align: inherit;">Một so sánh công bằng hơn có thể đạt được với một dự án lớn hơn đáng kể. </font><font style="vertical-align: inherit;">Nhưng nó chứng minh rằng việc sử dụng thư viện ngoại vi sẽ tiêu tốn nhiều bộ nhớ Flash hơn.</font></font></p>
+<blockquote>
+</blockquote>
+
+            <aside>
+            <hr>
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">« </font></font><a href="http://hertaville.com/the-iotogglem0-project-folder-structure-and-the-makefile.html" title="Trước đó: Cấu trúc thư mục dự án i photglem0 và tệp thực hiện"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Cấu trúc thư mục dự án i photglem0 và tệp thực hiện</font></font></a></li>
+ 
+                <li class="next_article"><a href="http://hertaville.com/stm32f0-gpio-tutorial-part-2.html" title="Tiếp theo: Tìm hiểu về GPIO của STM32F0 phần 2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Tìm hiểu về GPIO STM32F0′ phần 2</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> »</font></font></li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section>
+        <div class="span2" style="float:right;font-size:0.9em;">
+ 
+            <h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Được phát hành</font></font></h4>
+            <time pubdate="pubdate" datetime="2012-07-28T19:41:00-04:00"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">28 tháng 7 năm 2012</font></font></time>
+            <h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">thể loại</font></font></h4>
+            <a class="category-link" href="http://hertaville.com/categories.html#STM32F0-ref"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">STM32F0</font></font></a> 
+            <h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thẻ</font></font></h4>
+            <ul class="list-of-tags tags-in-article"> 
+                <li><a href="http://hertaville.com/tags.html#GPIO-ref"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPIO
+                     </font></font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">7</font></font></span>
+</a></li>
+                <li><a href="http://hertaville.com/tags.html#STM32F0-ref"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">STM32F0
+                     </font></font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">11</font></font></span>
+</a></li>
+            </ul>
+
+        </div>
+        </section>
+</div>
+</article>
+                </div>
+                <div class="span1"></div>
+            </div>
+        </div>
+    </div>
+<footer>
+<div id="footer">
+    <ul class="footer-content">
+        <li class="elegant-power"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Cung cấp bởi </font></font><a href="http://getpelican.com/" title="Trang chủ Pelican"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Pelican</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> . </font><font style="vertical-align: inherit;">Chủ đề: </font></font><a href="http://oncrashreboot.com/pelican-elegant" title="Chủ đề trang chủ thanh lịch"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thanh lịch</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> của </font></font><a href="http://oncrashreboot.com/" title="Trang chủ Talha Mansoor"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Talha Mansoor</font></font></a></li>
+    </ul>
+</div>
+</footer>            <script src="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/jquery.min.js.tải xuống"></script>
+        <script src="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/bootstrap.min.js.tải xuống"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./Tìm hiểu GPIO của STM32F0 phần 1 · Hertaville.com_files/translate_24dp.png" width="20" height="20" alt="Google Dịch"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">Văn bản gốc</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">Đóng góp bản dịch hay hơn</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+
+    
+<div class="goog-te-spinner-pos"><div class="goog-te-spinner-animation"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>
